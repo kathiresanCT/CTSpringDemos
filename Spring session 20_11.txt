@@ -1,0 +1,106 @@
+Spring MVC with layers , basic transactions
+Spring Rest
+
+use existing Spring Mvc form demo with validation
+
+Step 1:
+
+Add layers to this project
+
+base pkg naming convention for all below is com.ct
+
+create Service Package - com.ct.service
+
+	ICustomerService-interface
+	CustomerServiceImpl-class
+
+create Dao Package - com.ct.dao
+
+	ICustomerDao-interface
+	CustomerDaoImpl-class
+
+create Ui package - com.ct.controller
+
+	controller classes
+
+create jsp pages 
+
+home.jsp
+register.jsp
+Success.jsp
+error.jsp
+getAll.jsp
+getSingleData.jsp
+
+
+if auto generation then
+
+@Autowired
+private JdbcTemplate jdbcTemplate;
+
+	public User create(final User user) {
+		KeyHolder holder = new GeneratedKeyHolder();
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
+				ps.setString(1, user.getName());
+				ps.setString(2, user.getAddress());
+				ps.setString(3, user.getEmail());
+				return ps;
+			}
+		}, holder);
+
+		int newUserId = holder.getKey().intValue();
+		user.setId(newUserId);
+		return user;
+
+use auto incrment in mysql
+
+============================================
+
+
+rest full services
+
+<dependency>
+    <groupId>org.codehaus.jackson</groupId>
+    <artifactId>jackson-mapper-asl</artifactId>
+    <version>${jackson.version}</version>
+</dependency>
+
+ <!-- Bean View Resolver -->
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+        <property name="order" value="0" />
+    </bean>
+  
+    <!-- JSP View Resolver -->
+    <bean
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix">
+            <value>/WEB-INF/</value>
+        </property>
+        <property name="suffix">
+            <value>.jsp</value>
+        </property>
+        <property name="order" value="1" />
+    </bean>
+  
+    <bean name="jsonView"
+        class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
+  
+In logical view name - give bean id of jackson mapper in disp servlet
+
+
+
+full spring rest services:
+
+
+		
+Try to use the latest com.fasterxml.jackson.core/jackson-databind. I upgraded it to 2.9.4 and it works now.
+
+<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.9.4</version>
+</dependency>
